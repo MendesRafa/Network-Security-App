@@ -43,7 +43,7 @@ class App extends Component {
         window.alert(res.data.error);
         this.setState({user: null, password: null});
         document.getElementById('password').value='';
-        document.getElementById('username').value='';
+        document.getElementById('usernam').value='';
       }
     });
   };

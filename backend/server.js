@@ -202,9 +202,16 @@ router.get('/encrypt', (req, res) => {
       //we then encrypt our message with the user's 
       //public key (in this case the "user" is who we are 
       //sending our message to and not the logged in user)
-      const key = new NodeRSA();
-      key.importKey(data.public_key,'pkcs8-public-der');
-      var encryptedMessage=key.encrypt(message, 'base64');
+      //any errors are caught and sent back to the front end app
+      try {
+        const key = new NodeRSA();
+        key.importKey(data.public_key,'pkcs8-public-der');
+        var encryptedMessage=key.encrypt(message, 'base64');
+      }
+      catch (error) {
+        return res.json({success: false, error: "error while encrytping"});
+      }
+      
 
       //only the encrypted message is returned to the front
       //end app and no other sensitive information
@@ -242,9 +249,15 @@ router.get('/decrypt', (req, res) => {
       //we then decrypt our message with the user's 
       //private key (in this case the "user" is the 
       //logged in user)
-      const key = new NodeRSA();
-      key.importKey(data.private_key,"pkcs1-der");
-      var decryptedMessage=key.decrypt(message);
+      //any errors are caught and sent back to the front end app
+      try {
+        const key = new NodeRSA();
+        key.importKey(data.private_key,"pkcs1-der");
+        var decryptedMessage=key.decrypt(message);
+      }
+      catch (error) {
+        return res.json({success: false, error: "error while decrypting"});
+      }
 
       //only the decrypted message is returned to the front
       //end app and no other sensitive information
